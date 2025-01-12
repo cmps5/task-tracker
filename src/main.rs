@@ -1,10 +1,9 @@
 use clap::{Parser, Subcommand};
+use once_cell::sync::OnceCell;
+use std::sync::Mutex;
 
 mod task;
 use task::Task;
-
-use once_cell::sync::OnceCell;
-use std::sync::Mutex;
 
 // define the command line interface structure
 #[derive(Parser)]
@@ -22,6 +21,7 @@ enum Commands {
 }
 
 static TASKS: OnceCell<Mutex<Vec<Task>>> = OnceCell::new();
+
 fn init_tasks() {
     TASKS.set(Mutex::new(Vec::new())).ok();
 }
@@ -49,7 +49,7 @@ fn add_task(name: String) {
     let mut array = array.lock().unwrap();
 
     let task = Task::new(name);
-    println!("Task added: {}", task.name);
-    
+    println!("Task {} created at {}", task.name, task.created_at);
+
     array.push(task);
 }
