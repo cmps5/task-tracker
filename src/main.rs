@@ -17,6 +17,7 @@ enum Commands {
     Add { name: String },
     Complete { name: String },
     Status,
+    Delete { name: String },
 }
 
 static FILE_PATH: &str = "data/tasks.json";
@@ -34,8 +35,12 @@ fn main() {
             complete_task(name);
         }
         Commands::Status => {
-            println!("Showing status for all task");
+            println!("Showing status for all tasks");
             show_status();
+        }
+        Commands::Delete {name} => {
+            println!("Deleting task: {}", name);
+            delete_task(name);
         }
     }
 }
@@ -81,5 +86,18 @@ fn show_status() {
                 println!("not completed");
             }
         }
+    }
+}
+
+fn delete_task(name: String){
+    let mut tasks = load_tasks(FILE_PATH);
+
+    if let Some(index) = tasks.iter().position(|t| t.name == name) {
+        tasks.remove(index);
+        save_tasks(&tasks, FILE_PATH).expect("Failed to save tasks");
+        println!("Task '{}' deleted successfully!", name);
+    } else {
+        println!("Task '{}' not found!", name);
+        process::exit(1);
     }
 }
