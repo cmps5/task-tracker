@@ -39,6 +39,7 @@ impl eframe::App for TaskApp {
             ui.heading("Task Tracker");
 
             let mut task_to_complete = None;
+            let mut task_to_delete = None;
 
             for (index, task) in self.tasks.iter_mut().enumerate() {
                 ui.horizontal(|ui| {
@@ -46,11 +47,20 @@ impl eframe::App for TaskApp {
                     if !task.completed && ui.button("Complete").clicked() {
                         task_to_complete = Some(index);
                     }
+                    if ui.button("Delete").clicked() {
+                        task_to_delete = Some(index);
+                    }
                 });
             }
 
             if let Some(index) = task_to_complete {
                 self.tasks[index].complete();
+                save_tasks(&self.tasks, FILE_PATH).ok();
+                self.needs_refresh = true;
+            }
+
+            if let Some(index) = task_to_delete {
+                self.tasks.remove(index);
                 save_tasks(&self.tasks, FILE_PATH).ok();
                 self.needs_refresh = true;
             }
@@ -66,6 +76,14 @@ impl eframe::App for TaskApp {
                     self.new_task_name.clear();
                 }
             });
+
+            ui.separator();
+
+            if ui.button("Clear Tasks").clicked() {
+                self.tasks.clear();
+                save_tasks(&self.tasks, FILE_PATH).ok();
+                self.needs_refresh = true;
+            }
         });
     }
 }

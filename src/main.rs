@@ -20,6 +20,7 @@ enum Commands {
     Complete { name: String },
     Status,
     Delete { name: String },
+    Clear,
 }
 
 static FILE_PATH: &str = "data/tasks.json";
@@ -44,6 +45,9 @@ fn main() {
             Commands::Delete { name } => {
                 println!("Deleting task: {}", name);
                 delete_task(name);
+            }
+            Commands::Clear => {
+                clear_tasks();
             }
         }
     } else {
@@ -112,4 +116,9 @@ fn delete_task(name: String) {
         println!("Task '{}' not found!", name);
         return;
     }
+}
+
+fn clear_tasks() {
+    save_tasks(&Vec::<Task>::new(), FILE_PATH).expect("Failed to save tasks");
+    println!("All tasks cleared!");
 }
