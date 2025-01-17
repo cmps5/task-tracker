@@ -43,7 +43,11 @@ impl eframe::App for TaskApp {
 
             for (index, task) in self.tasks.iter_mut().enumerate() {
                 ui.horizontal(|ui| {
-                    ui.label(&task.name);
+                    ui.label(format!(
+                        "{}{}",
+                        task.name,
+                        if task.completed { " - (Completed)" } else { "" }
+                    ));
                     if !task.completed && ui.button("Complete").clicked() {
                         task_to_complete = Some(index);
                     }
