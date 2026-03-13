@@ -16,7 +16,7 @@ To install Task Tracker, you need to have Rust installed on your system. You can
 
 Clone the repository:
 ```sh
-git clone https://github.com/cmps5/task-tracker.git
+git clone <repository-url>
 cd task-tracker
 ```
 
